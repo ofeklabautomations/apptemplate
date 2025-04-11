@@ -1,0 +1,9 @@
+@import "tailwindcss";
+@import "@repo/ui/styles/tailwind.css";
+@source "../app/**/*.{ts,tsx}";
+@source "../../../packages/ui/**/*.{ts,tsx}";
+
+@theme {
+  --spacing-console-width: 1100px;
+  --spacing-navbar-height: 64px;
+}
