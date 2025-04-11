@@ -1,5 +1,6 @@
 "use client";
 
+import UpgradeButton from "@/components/upgrade-dialog";
 import { createClient } from "@/utils/update/client";
 import {
   Button,
@@ -13,9 +14,31 @@ import {
 import { Building, LogOut, User, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import useSWR from "swr";
 
 export default function AccountButton() {
   const router = useRouter();
+
+  const { data: subscriptionData } = useSWR(
+    "subscriptions-update",
+    async () => {
+      const client = createClient();
+      const { data, error } = await client.billing.getSubscriptions();
+      if (error) {
+        throw new Error("Failed to fetch subscriptions");
+      }
+      return data;
+    }
+  );
+
+  const { data: accountData } = useSWR("account-update", async () => {
+    const client = createClient();
+    const { data, error } = await client.auth.getUser();
+    if (error) {
+      throw new Error("Failed to fetch subscriptions");
+    }
+    return data;
+  });
 
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
@@ -26,6 +49,11 @@ export default function AccountButton() {
     router.push("/auth/sign-in");
   }
 
+  const showPaidContent =
+    subscriptionData?.subscriptions != null &&
+    subscriptionData.subscriptions.length > 0 &&
+    subscriptionData.subscriptions[0].status === "active";
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -35,8 +63,14 @@ export default function AccountButton() {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[200px]">
         <DropdownMenuGroup className="flex flex-col p-2">
-          <h3 className="text-sm font-medium">John Doe</h3>
-          <p className="text-xs text-muted-foreground">john@doe.com</p>
+          <h3 className="text-sm font-medium">
+            {accountData?.user?.user_metadata?.name ??
+              accountData?.user?.email ??
+              "User"}
+          </h3>
+          <p className="text-xs text-muted-foreground">
+            {accountData?.user?.email}
+          </p>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
@@ -66,10 +100,14 @@ export default function AccountButton() {
             </div>
           </DropdownMenuItem>
         </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup className="p-2">
-          <Button className="cursor-pointer w-full h-8">Upgrade to Pro</Button>
-        </DropdownMenuGroup>
+        {!showPaidContent && (
+          <>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup className="p-2">
+              <UpgradeButton className="w-full h-8" />
+            </DropdownMenuGroup>
+          </>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );

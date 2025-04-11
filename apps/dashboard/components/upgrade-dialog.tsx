@@ -16,7 +16,7 @@ import PricingSection from "@/components/pricing-section";
 import { ProductWithPrices, Subscription } from "@updatedev/js";
 import { CheckCircle } from "lucide-react";
 
-export default function UpgradeButton() {
+export default function UpgradeButton({ className }: { className?: string }) {
   const { data: productData } = useSWR("products-update", async () => {
     const client = createClient();
     const { data, error } = await client.billing.getProducts();
@@ -38,10 +38,21 @@ export default function UpgradeButton() {
     }
   );
 
+  const showPaidContent =
+    subscriptionData?.subscriptions != null &&
+    subscriptionData.subscriptions.length > 0 &&
+    subscriptionData.subscriptions[0].status === "active";
+
+  if (showPaidContent) {
+    return null;
+  }
+
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button size={"sm"}>Upgrade</Button>
+        <Button size={"sm"} className={className}>
+          Upgrade
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

@@ -22,7 +22,7 @@ export default function PricingSection({
       return;
     }
     const client = createClient();
-    const redirectUrl = `${window.location.origin}/protected/subscription`;
+    const redirectUrl = `${window.location.origin}/dashboard`;
     const { data, error } = await client.billing.createCheckoutSession(
       priceId,
       {
