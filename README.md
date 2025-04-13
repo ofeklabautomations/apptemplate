@@ -120,10 +120,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 💪 Support
 
-If you like this project, please consider giving it a ⭐️. It helps others discover this resource.
-
 For issues, feature requests, or questions, please [open an issue](https://github.com/your-org/lab-automations-saas-template/issues).
 
 ---
 
 Built with ❤️ by Lab Automations
+With all credit to Emmett M: https://github.com/EmmettM/super-saas-template
