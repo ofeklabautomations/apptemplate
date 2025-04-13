@@ -2,8 +2,6 @@
 
 A production-ready, feature-rich SaaS starter kit built with modern web technologies. Launch your lab automation SaaS product in days, not months.
 
-![Demo Screenshot](thumbnail.png)
-
 ## ✨ Features
 
 - 🏗️ **Rock-solid Foundation**
